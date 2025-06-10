@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { products, downloads } from '@/lib/db/schema';
-import { eq } from 'drizzle-orm';
+import { eq, sql } from 'drizzle-orm';
 
 // POST - Registrar descarga
 export async function POST(request: NextRequest) {
@@ -24,7 +24,7 @@ export async function POST(request: NextRequest) {
     // Incrementar contador de descargas del producto
     await db.update(products)
       .set({
-        downloadCount: products.downloadCount + 1,
+        downloadCount: sql`${products.downloadCount} + 1`,
         updatedAt: new Date(),
       })
       .where(eq(products.id, parseInt(productId)));
